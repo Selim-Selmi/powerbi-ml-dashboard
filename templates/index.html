@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Home • Restaurant Intelligence{% endblock %}
+{% block content %}
+  <div class="p-4 bg-light rounded-3">
+    <h1 class="display-6 mb-3">Welcome 👋</h1>
+    <p class="lead mb-4">
+      Use the tools below to predict user restaurant ratings, recommend cuisines, and
+      explore insights in your Power BI dashboard.
+    </p>
+    <div class="d-flex gap-2">
+      <a class="btn btn-primary btn-lg" href="{{ url_for('rating') }}">⭐ Predict Rating</a>
+      <a class="btn btn-success btn-lg" href="{{ url_for('cuisine') }}">🍜 Recommend Cuisine</a>
+      <a class="btn btn-warning btn-lg" href="{{ url_for('dashboard') }}">📊 Power BI</a>
+    </div>
+  </div>
+{% endblock %}

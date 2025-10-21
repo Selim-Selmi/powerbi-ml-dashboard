@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Recommend Cuisine{% endblock %}
+{% block content %}
+  <h2 class="mb-3">🍜 Recommend Cuisine Preferences</h2>
+
+  <form method="post" class="row g-3 mb-4">
+    <div class="col-md-3">
+      <label class="form-label" for="age">Age</label>
+      <input id="age" name="age" type="number" min="18" max="100" class="form-control" value="25" required />
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="budget">Budget</label>
+      <select id="budget" name="budget" class="form-select">
+        <option>Low</option><option>Medium</option><option>High</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="drink_level">Drink Level</label>
+      <select id="drink_level" name="drink_level" class="form-select">
+        <option>Abstemious</option>
+        <option>Social Drinker</option>
+        <option>Casual Drinker</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="transportation">Transportation</label>
+      <select id="transportation" name="transportation" class="form-select">
+        <option>Public</option><option>Car Owner</option><option>Walk</option>
+      </select>
+    </div>
+
+    <div class="col-md-3">
+      <label class="form-label" for="marital_status">Marital Status</label>
+      <select id="marital_status" name="marital_status" class="form-select">
+        <option>Single</option><option>Married</option><option>Divorced</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="children">Children</label>
+      <select id="children" name="children" class="form-select">
+        <option>None</option><option>Yes</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="occupation">Occupation</label>
+      <select id="occupation" name="occupation" class="form-select">
+        <option>Student</option><option>Professional</option><option>Other</option>
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label" for="smoker">Smoker</label>
+      <select id="smoker" name="smoker" class="form-select">
+        <option>No</option><option>Yes</option>
+      </select>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-success">Predict Preferred Cuisine</button>
+    </div>
+  </form>
+
+  {% if top3 %}
+    <h5>Top-3 Recommended Cuisines</h5>
+    <ul class="list-group">
+      {% for name, pct in top3 %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          <span><strong>{{ name }}</strong></span>
+          <span class="badge text-bg-primary rounded-pill">{{ "%.1f"|format(pct) }}%</span>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="alert alert-info mt-3">
+      ✅ Most likely cuisine: <strong>{{ top3[0][0] }}</strong>
+    </div>
+  {% endif %}
+{% endblock %}
