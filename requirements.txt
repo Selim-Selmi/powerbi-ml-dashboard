@@ -1,4 +1,5 @@
-flask
+Flask
+Flask-Login
 gunicorn
 pandas
 numpy
