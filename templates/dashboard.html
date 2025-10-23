@@ -1,13 +1,61 @@
 {% extends "base.html" %}
 {% block title %}Power BI Dashboard{% endblock %}
 {% block content %}
-  <h2 class="mb-3">📊 Power BI Insights</h2>
-  <div class="ratio ratio-16x9">
-    <iframe
-      title="integration"
-      src="https://app.powerbi.com/reportEmbed?reportId=30d6a544-aa7c-4287-a603-0c21d3b0750e&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730"
-      frameborder="0"
-      allowfullscreen="true">
-    </iframe>
+<style>
+  /* Full background image */
+  body {
+    background: url('{{ url_for('static', filename='images/dash.jpg') }}') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Overlay for contrast */
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  h2 {
+    color: #003366;
+    font-weight: 600;
+  }
+</style>
+
+<!-- ✅ Background overlay -->
+<div class="overlay"></div>
+
+<!-- ✅ Main container -->
+<div class="d-flex justify-content-center align-items-center">
+  <div class="p-4"
+       style="
+         background-color: #ffffff;
+         border-radius: 15px;
+         box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+         width: 100%;
+         max-width: 1200px;
+         margin-top: 40px;
+         margin-bottom: 40px;
+       ">
+    <h2 class="text-center mb-4">
+      Restaurant Analytics Dashboard
+    </h2>
+    <div class="ratio ratio-16x9">
+      <iframe
+        title="Power BI Integration"
+        width="100%"
+        height="700"
+        style="border:none; border-radius:10px;"
+        src="https://app.powerbi.com/reportEmbed?reportId=289dd2e0-5a98-43f3-b70e-d3fcab671412&autoAuth=true&ctid=604f1a96-cbe8-43f8-abbf-f8eaf5d85730&navContentPaneEnabled=false&filterPaneEnabled=false"
+        frameborder="0"
+        allowfullscreen="true">
+      </iframe>
+    </div>
   </div>
+</div>
 {% endblock %}

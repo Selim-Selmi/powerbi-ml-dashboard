@@ -1,3 +1,5 @@
+from flask_login import LoginManager, login_required, current_user
+from auth import auth_bp, User  # import Blueprint & User class
 from flask import Flask, render_template, request, redirect, url_for, flash
 import pandas as pd
 import numpy as np
@@ -6,6 +8,17 @@ from pathlib import Path
 
 app = Flask(__name__)
 app.secret_key = "change-this-in-production"
+
+
+# -------- Login setup --------
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "auth.login"  # redirect unauthorized users
+app.register_blueprint(auth_bp)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User(user_id)
 
 # -------- Paths --------
 ROOT = Path(__file__).resolve().parent
@@ -34,16 +47,17 @@ consumers_df, restaurants_df, preferences_df = load_data()
 rating_model = joblib.load(MODELS_DIR / "xgb_rating_model.joblib")
 cuisine_model = joblib.load(MODELS_DIR / "cuisine_classifier.joblib")
 
+
 # -------- Helpers --------
-def prepare_rating_features(consumer_id: int, restaurant_id: int) -> pd.DataFrame:
-    c_row = consumers_df.loc[consumers_df["Consumer_ID"] == consumer_id]
-    r_row = restaurants_df.loc[restaurants_df["Restaurant_ID"] == restaurant_id]
+def prepare_rating_features(consumer_id: str, restaurant_name: str) -> pd.DataFrame:
+    c_row = consumers_df.loc[consumers_df["Consumer_ID"].astype(str) == str(consumer_id)]
+    r_row = restaurants_df.loc[restaurants_df["Name"].astype(str) == str(restaurant_name)]
 
     if c_row.empty or r_row.empty:
-        raise ValueError("Invalid Consumer_ID or Restaurant_ID.")
+        raise ValueError("Invalid Consumer_ID or Restaurant Name.")
 
     pref = preferences_df.loc[
-        preferences_df["Consumer_ID"] == consumer_id, "Preferred_Cuisine"
+        preferences_df["Consumer_ID"].astype(str) == str(consumer_id), "Preferred_Cuisine"
     ]
     preferred_cuisine = pref.iloc[0] if not pref.empty else "Unknown"
 
@@ -66,12 +80,13 @@ def prepare_rating_features(consumer_id: int, restaurant_id: int) -> pd.DataFram
     }
 
     X = pd.DataFrame([data])
+
     # Ensure numeric types where needed
     for col in ["Age", "Cuisine_Match"]:
         if col in X.columns:
             X[col] = pd.to_numeric(X[col], errors="coerce").fillna(0)
 
-    # Cast others to string to align with OneHotEncoder expectations
+    # Cast others to string for OneHotEncoder compatibility
     for col in X.columns:
         if col not in ["Age", "Cuisine_Match"]:
             X[col] = X[col].astype(str).replace("nan", "Unknown").fillna("Unknown")
@@ -79,30 +94,33 @@ def prepare_rating_features(consumer_id: int, restaurant_id: int) -> pd.DataFram
     X = X.replace([np.inf, -np.inf], np.nan).fillna(0)
     return X
 
+
 # ==================== Routes ====================
 
 @app.route("/")
 def home():
     return render_template(
         "index.html",
-        consumer_ids=sorted(consumers_df["Consumer_ID"].unique().tolist()),
-        restaurant_ids=sorted(restaurants_df["Restaurant_ID"].unique().tolist()),
+        consumer_ids=sorted(consumers_df["Consumer_ID"].astype(str).unique().tolist()),
+        restaurant_names=sorted(restaurants_df["Name"].astype(str).unique().tolist()),
     )
 
+
 @app.route("/rating", methods=["GET", "POST"])
+@login_required
 def rating():
-    consumer_ids = sorted(consumers_df["Consumer_ID"].unique().tolist())
-    restaurant_ids = sorted(restaurants_df["Restaurant_ID"].unique().tolist())
+    consumer_ids = sorted(consumers_df["Consumer_ID"].astype(str).unique().tolist())
+    restaurant_names = sorted(restaurants_df["Name"].astype(str).unique().tolist())
 
     prediction = None
     features_preview = None
 
     if request.method == "POST":
         try:
-            consumer_id = int(request.form.get("consumer_id"))
-            restaurant_id = int(request.form.get("restaurant_id"))
+            consumer_id = request.form.get("consumer_id")
+            restaurant_name = request.form.get("restaurant_name")
 
-            X = prepare_rating_features(consumer_id, restaurant_id)
+            X = prepare_rating_features(consumer_id, restaurant_name)
             y_pred = rating_model.predict(X)[0]
             prediction = round(float(y_pred), 2)
             features_preview = X.to_dict(orient="records")[0]
@@ -112,12 +130,14 @@ def rating():
     return render_template(
         "rating.html",
         consumer_ids=consumer_ids,
-        restaurant_ids=restaurant_ids,
+        restaurant_names=restaurant_names,
         prediction=prediction,
         features_preview=features_preview,
     )
 
+
 @app.route("/cuisine", methods=["GET", "POST"])
+@login_required
 def cuisine():
     top3 = None
     if request.method == "POST":
@@ -142,9 +162,12 @@ def cuisine():
 
     return render_template("cuisine.html", top3=top3)
 
+
 @app.route("/dashboard")
+@login_required
 def dashboard():
     return render_template("dashboard.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

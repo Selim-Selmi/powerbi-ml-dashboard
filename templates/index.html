@@ -1,16 +1,15 @@
 {% extends "base.html" %}
-{% block title %}Home • Restaurant Intelligence{% endblock %}
+{% block title %}Home{% endblock %}
 {% block content %}
-  <div class="p-4 bg-light rounded-3">
-    <h1 class="display-6 mb-3">Welcome 👋</h1>
-    <p class="lead mb-4">
-      Use the tools below to predict user restaurant ratings, recommend cuisines, and
-      explore insights in your Power BI dashboard.
-    </p>
-    <div class="d-flex gap-2">
-      <a class="btn btn-primary btn-lg" href="{{ url_for('rating') }}">⭐ Predict Rating</a>
-      <a class="btn btn-success btn-lg" href="{{ url_for('cuisine') }}">🍜 Recommend Cuisine</a>
-      <a class="btn btn-warning btn-lg" href="{{ url_for('dashboard') }}">📊 Power BI</a>
-    </div>
+<div class="card mx-auto" style="max-width: 800px;">
+  <h2 class="mb-3">Welcome to Restaurant Intelligence</h2>
+  <p class="mb-4 text-light">
+    Use the tools below to analyze and predict restaurant performance, consumer preferences, and explore insights through Power BI.
+  </p>
+  <div class="d-flex justify-content-center gap-3">
+    <a href="{{ url_for('rating') }}" class="btn">Predict Rating</a>
+    <a href="{{ url_for('cuisine') }}" class="btn">Recommend Cuisine</a>
+    <a href="{{ url_for('dashboard') }}" class="btn">View Dashboard</a>
   </div>
+</div>
 {% endblock %}

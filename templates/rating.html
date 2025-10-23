@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% block title %}Predict Rating{% endblock %}
+{% block content %}
+<style>
+  /* Full background image */
+  body {
+    background: url('{{ url_for('static', filename='images/pred.jpg') }}') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Subtle dark overlay for readability */
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.45);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  /* Make text readable on the dark background */
+  h2, label, summary {
+    color: #ffffff;
+  }
+
+  .form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+  }
+
+  .btn-primary {
+    background-color: #003366;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #004c99;
+  }
+
+  .alert-success, .bg-light {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    color: #003366;
+    border: none;
+  }
+</style>
+
+<!-- ✅ Background overlay -->
+<div class="overlay"></div>
+
+<!-- ✅ Page content -->
+  <h2 class="mb-3 text-center">Predict Consumer’s Restaurant Rating</h2>
+
+  <form method="post" class="row g-3 mb-4">
+    <div class="col-md-6">
+      <label for="consumer_id" class="form-label">Consumer ID</label>
+      <select id="consumer_id" name="consumer_id" class="form-select" required>
+        {% for cid in consumer_ids %}
+          <option value="{{ cid }}">{{ cid }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-md-6">
+      <label for="restaurant_name" class="form-label">Restaurant Name</label>
+      <select id="restaurant_name" name="restaurant_name" class="form-select" required>
+        {% for name in restaurant_names %}
+          <option value="{{ name }}">{{ name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="col-12 text-center mt-3">
+      <button type="submit" class="btn btn-primary px-5">Predict</button>
+    </div>
+  </form>
+
+  {% if prediction is not none %}
+    <div class="alert alert-success mt-3">
+      <strong>Predicted Overall Rating:</strong> {{ "%.2f"|format(prediction) }} / 2.00
+    </div>
+
+    {% if features_preview %}
+      <details class="mb-3">
+        <summary class="mb-2">Show feature inputs</summary>
+        <pre class="bg-light p-3 rounded">{{ features_preview | tojson(indent=2) }}</pre>
+      </details>
+    {% endif %}
+  {% endif %}
+{% endblock %}

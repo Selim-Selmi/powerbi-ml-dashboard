@@ -1,7 +1,61 @@
 {% extends "base.html" %}
 {% block title %}Recommend Cuisine{% endblock %}
 {% block content %}
-  <h2 class="mb-3">🍜 Recommend Cuisine Preferences</h2>
+<style>
+  /* Full background image */
+  body {
+    background: url('{{ url_for('static', filename='images/bg1.jpg') }}') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Semi-transparent overlay for readability */
+  .overlay {
+    background-color: rgba(0, 0, 0, 0.45);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  /* Style the text and form to contrast nicely */
+  h2, h5, label, p {
+    color: #ffffff;
+  }
+
+  .form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.9);
+    border: none;
+  }
+
+  .btn-success {
+    background-color: #003366;
+    border: none;
+  }
+
+  .btn-success:hover {
+    background-color: #004c99;
+  }
+
+  .list-group-item {
+    background-color: rgba(255, 255, 255, 0.9);
+  }
+
+  .alert-info {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: #003366;
+    border: none;
+  }
+</style>
+
+<!-- ✅ Background overlay -->
+<div class="overlay"></div>
+
+<!-- ✅ Page content -->
+  <h2 class="mb-3 text-center">Recommend Cuisine Preferences</h2>
 
   <form method="post" class="row g-3 mb-4">
     <div class="col-md-3">
@@ -54,8 +108,8 @@
       </select>
     </div>
 
-    <div class="col-12">
-      <button type="submit" class="btn btn-success">Predict Preferred Cuisine</button>
+    <div class="col-12 text-center mt-3">
+      <button type="submit" class="btn btn-success px-5">Predict Preferred Cuisine</button>
     </div>
   </form>
 

@@ -1,0 +1,55 @@
+/* ======== GLOBAL ======== */
+html, body {
+  background-color: #003366;
+  color: #ffffff;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ======== NAVBAR ======== */
+.navbar {
+  background-color: #00264d !important;
+  border-bottom: 2px solid #004080;
+}
+
+.navbar .btn {
+  border-radius: 5px;
+  font-weight: 500;
+}
+
+/* ======== MAIN ======== */
+main.container {
+  flex: 1;
+  background-color: trnasparent;
+  padding: 3rem 2rem;
+}
+
+/* ======== BUTTONS ======== */
+.btn {
+  border-radius: 5px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+}
+
+/* ======== CARDS ======== */
+.card {
+  background-color: #0c77e3;
+  border: 1px solid #004080;
+  border-radius: 10px;
+  padding: 2rem;
+  color: #ffffff;
+}
+
+/* ======== FOOTER ======== */
+footer {
+  background-color: #00264d;
+  border-top: 2px solid #004080;
+  color: #cccccc;
+  text-align: center;
+}

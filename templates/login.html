@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block content %}
+<style>
+  /* Full background image */
+  body {
+    background: url('{{ url_for('static', filename='images/login-bg.jpg') }}') no-repeat center center fixed;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+  }
+
+
+  /* Centered login card */
+  .login-card {
+    background-color: rgba(255, 255, 255, 0.95);
+    color: #003366;
+    border-radius: 12px;
+    padding: 2rem;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    width: 100%;
+    max-width: 400px;
+  }
+
+  .login-card h3 {
+    font-weight: 600;
+  }
+
+  .btn-primary {
+    background-color: #003366;
+    border: none;
+  }
+
+  .btn-primary:hover {
+    background-color: #004c99;
+  }
+</style>
+
+<div class="overlay d-flex justify-content-center align-items-center">
+  <div class="login-card text-center">
+    <h3 class="mb-4">Login</h3>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+      <div class="mb-3 text-start">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-control" required />
+      </div>
+      <div class="mb-3 text-start">
+        <label class="form-label">Password</label>
+        <input type="password" name="password" class="form-control" required />
+      </div>
+      <button type="submit" class="btn btn-primary w-100">Login</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
